@@ -7,9 +7,14 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/solid";
 import { useEffect, useRef, useState } from "react";
-import { PhotographIcon } from "@heroicons/react/outline";
+import {
+  ArrowCircleRightIcon,
+  EmojiHappyIcon,
+  MicrophoneIcon,
+  PhotographIcon,
+} from "@heroicons/react/outline";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, storage } from "../firebase";
+import { auth, db } from "../firebase";
 import { useRouter } from "next/router";
 import { useCollection } from "react-firebase-hooks/firestore";
 import getRecipientEmail from "../utils/getRecipientEmail";
@@ -19,7 +24,6 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import ReactScrollableFeed from "react-scrollable-feed";
 import TimeAgo from "timeago-react";
-import InputEmoji from "react-input-emoji";
 import { v4 as uuidv4 } from "uuid";
 
 const ChatScreen = ({ chat, messages }) => {
@@ -62,9 +66,8 @@ const ChatScreen = ({ chat, messages }) => {
     }
   };
 
-  const handleOnEnter = async (text) => {
-    if (!text.trim()) return null;
-
+  const handleOnEnter = async (e) => {
+    e.preventDefault();
     const messageData = {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       message: text,
@@ -96,6 +99,8 @@ const ChatScreen = ({ chat, messages }) => {
       .doc(router.query.id)
       .collection("messages")
       .add(messageData);
+
+    setText("");
   };
 
   const recipient = recipientSnapshot?.docs?.[0]?.data();
@@ -198,16 +203,19 @@ const ChatScreen = ({ chat, messages }) => {
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
       </div>
-      <div className="relative flex items-center bg-white text-blue-600 border border-t-[#f5f5f5] custom-input-emoji" style={{ height: "calc(100vh - 4rem)", position: "sticky", bottom: 0 }}>
+      <form
+        className="relative flex items-center bg-white text-blue-600 border border-t-[#f5f5f5] custom-input-emoji"
+        style={{ height: "calc(100vh - 4rem)", position: "sticky", bottom: 0 }}
+      >
         <PlusCircleIcon
-          width={30}
-          height={30}
+          width={40}
+          height={40}
           className="cursor-pointer"
           onClick={sendVoice}
         />
         <PhotographIcon
-          width={30}
-          height={30}
+          width={40}
+          height={40}
           className="cursor-pointer"
           onClick={() => filepickerRef.current.click()}
         />
@@ -227,17 +235,29 @@ const ChatScreen = ({ chat, messages }) => {
             <p className="text-xs text-red-500 text-center">Remove</p>
           </div>
         )}
-       <InputEmoji
-      value={text}
-      onChange={setText}
-      cleanOnEnter
-      onEnter={handleOnEnter}
-      placeholder="Type a message"
-      className="w-full px-4 py-2 border-t text-lg"
-      style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-    />
-  </div>
-</div>
+        <EmojiHappyIcon height={40} width={40} className="cursor-pointer" />
+        <textarea
+          rows={1}
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Type a message"
+          className="w-full px-4 py-2 border border-gray-100 text-lg rounded-full outline-none resize-none"
+          // style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+        />
+        {text.trim() || imageToPost ? (
+          <ArrowCircleRightIcon
+            type="submit"
+            onClick={handleOnEnter}
+            width={40}
+            height={40}
+            className="cursor-pointer bg-[#f5f5f5] rounded-full"
+          />
+        ) : (
+          <MicrophoneIcon width={40} height={40} className="cursor-pointer" />
+        )}
+      </form>
+    </div>
   );
 };
 export default ChatScreen;
