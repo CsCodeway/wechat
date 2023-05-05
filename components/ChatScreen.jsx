@@ -140,7 +140,7 @@ const ChatScreen = ({ chat, messages }) => {
   const sendVoice = () => {};
 
   return (
-    <div className="flex flex-col h-screen flex-1">
+    <div className="flex flex-col h-screen flex-1 overflow-hidden">
       <div className="flex items-center p-2 border bg-white border-[#f5f5f5] top-0 sticky">
         <ArrowLeftIcon
           width={25}
