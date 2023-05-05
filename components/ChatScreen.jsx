@@ -141,7 +141,7 @@ const ChatScreen = ({ chat, messages }) => {
 
   return (
     <div className="flex flex-col h-screen flex-1">
-      <div className="flex items-center p-2 border border-[#f5f5f5]">
+      <div className="flex items-center p-2 border border-[#f5f5f5] top-0 sticky">
         <ArrowLeftIcon
           width={25}
           height={25}
@@ -198,7 +198,8 @@ const ChatScreen = ({ chat, messages }) => {
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
       </div>
-      <div className="relative flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji" style={{ height: "calc(100vh - 4rem)" }}>        <PlusCircleIcon
+      <div className="bottom-0 sticky flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji" style={{ height: "calc(100vh - 4rem)" }}>
+        <PlusCircleIcon
           width={30}
           height={30}
           className="cursor-pointer"
