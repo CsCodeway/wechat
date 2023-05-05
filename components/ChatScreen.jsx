@@ -141,7 +141,7 @@ const ChatScreen = ({ chat, messages }) => {
 
   return (
     <div className="flex flex-col h-screen flex-1">
-      <div className="flex items-center p-2 bg-white border border-[#f5f5f5]" style={{ position: "sticky", top: 0 }}>
+      <div className="flex items-center p-2 bg-white border border-[#f5f5f5]" style={{ position: "sticky"}}>
         <ArrowLeftIcon
           width={25}
           height={25}
