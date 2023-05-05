@@ -141,7 +141,7 @@ const ChatScreen = ({ chat, messages }) => {
 
   return (
     <div className="flex flex-col h-screen flex-1">
-      <div className="flex items-center p-2 border border-[#f5f5f5] top-0 sticky">
+      <div className="flex items-center p-2 border bg-white border-[#f5f5f5] top-0 sticky">
         <ArrowLeftIcon
           width={25}
           height={25}
@@ -198,7 +198,7 @@ const ChatScreen = ({ chat, messages }) => {
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
       </div>
-      <div className="bottom-0 sticky flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji" style={{ height: "calc(100vh - 4rem)" }}>
+      <div className="bottom-0 bg-white sticky flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji">
         <PlusCircleIcon
           width={30}
           height={30}
@@ -227,17 +227,17 @@ const ChatScreen = ({ chat, messages }) => {
             <p className="text-xs text-red-500 text-center">Remove</p>
           </div>
         )}
-       <InputEmoji
-      value={text}
-      onChange={setText}
-      cleanOnEnter
-      onEnter={handleOnEnter}
-      placeholder="Type a message"
-      className="w-full px-4 py-2 border-t text-lg"
-      style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-    />
-  </div>
-</div>
+        <InputEmoji
+          value={text}
+          onChange={setText}
+          cleanOnEnter
+          onEnter={handleOnEnter}
+          placeholder="Type a message"
+          className="w-full px-4 py-2 border-t text-lg"
+          style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+        />
+      </div>
+    </div>
   );
 };
 export default ChatScreen;
