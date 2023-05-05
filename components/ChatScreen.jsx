@@ -198,7 +198,7 @@ const ChatScreen = ({ chat, messages }) => {
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
       </div>
-      <div className="bottom-0 bg-white sticky flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji">
+      <div className="bottom-0 bg-white sticky flex items-center text-blue-600 border border-t-[#f5f5f5] custom-input-emoji"  style={{ height: "calc(100vh - 4rem)" }}>
         <PlusCircleIcon
           width={30}
           height={30}
