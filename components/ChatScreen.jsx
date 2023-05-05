@@ -193,7 +193,7 @@ const ChatScreen = ({ chat, messages }) => {
         </div>
       </div>
       <div
-        className="flex-1 items-center justify-center overflow-y-auto px-5 pt-3"
+        className="flex-1 items-center justify-center overflow-y-auto px-5 pt-3 h-screen"
         ref={chatRef}
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
