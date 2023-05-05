@@ -235,7 +235,6 @@ const ChatScreen = ({ chat, messages }) => {
           placeholder="Type a message"
           className="w-full px-4 py-2 border-t text-lg"
           style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-          height={70}
         />
       </div>
     </div>
