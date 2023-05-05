@@ -25,6 +25,7 @@ import "firebase/compat/firestore";
 import ReactScrollableFeed from "react-scrollable-feed";
 import TimeAgo from "timeago-react";
 import { v4 as uuidv4 } from "uuid";
+import EmojiPicker, { SuggestionMode } from "emoji-picker-react";
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
@@ -33,6 +34,7 @@ const ChatScreen = ({ chat, messages }) => {
   const [imageToPost, setImageToPost] = useState(null);
   const router = useRouter();
   const chatRef = useRef();
+  const [showPopup, setShowPopup] = useState(false);
   const [messageSnapshot] = useCollection(
     db
       .collection("chats")
@@ -86,6 +88,7 @@ const ChatScreen = ({ chat, messages }) => {
       messageData.imageURL = await imageSnapshot.ref.getDownloadURL();
 
       removeImage();
+      setShowPopup(false);
     }
 
     db.collection("users").doc(user.uid).set(
@@ -116,7 +119,7 @@ const ChatScreen = ({ chat, messages }) => {
 
   const addImageToPost = (e) => {
     const reader = new FileReader();
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 10 * 1024 * 1024; // 5MB
 
     if (e.target.files[0]) {
       const fileSize = e.target.files[0].size;
@@ -143,6 +146,14 @@ const ChatScreen = ({ chat, messages }) => {
   };
 
   const sendVoice = () => {};
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
+  const onEmojiClick = (data) => {
+    setText(text + data.emoji);
+  };
 
   return (
     <div className="flex flex-col h-screen flex-1">
@@ -202,6 +213,15 @@ const ChatScreen = ({ chat, messages }) => {
         ref={chatRef}
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
+      {showPopup && (
+        <div className="fixed bottom-0 ">
+            <EmojiPicker
+              theme="auto"
+              onEmojiClick={onEmojiClick}
+              suggestedEmojisMode={SuggestionMode.RECENT}
+            />
+        </div>
+      )}
       </div>
       <form
         className="relative flex items-center bg-white text-blue-600 border border-t-[#f5f5f5] custom-input-emoji"
@@ -235,14 +255,19 @@ const ChatScreen = ({ chat, messages }) => {
             <p className="text-xs text-red-500 text-center">Remove</p>
           </div>
         )}
-        <EmojiHappyIcon height={40} width={40} className="cursor-pointer" />
+        <EmojiHappyIcon
+          height={40}
+          width={40}
+          className="cursor-pointer"
+          onClick={togglePopup}
+        />
         <textarea
           rows={1}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message"
-          className="w-full px-4 py-2 border border-gray-100 text-lg rounded-full outline-none resize-none"
+          className="w-full px-4 py-2 border text-gray-700 border-gray-100 text-lg rounded-full outline-none resize-none"
           // style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
         />
         {text.trim() || imageToPost ? (
@@ -254,7 +279,7 @@ const ChatScreen = ({ chat, messages }) => {
             className="cursor-pointer bg-[#f5f5f5] rounded-full"
           />
         ) : (
-          <MicrophoneIcon width={40} height={40} className="cursor-pointer" />
+          <MicrophoneIcon width={37} height={37} className="cursor-pointer" />
         )}
       </form>
     </div>

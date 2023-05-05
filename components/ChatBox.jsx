@@ -36,8 +36,12 @@ const ChatBox = ({ id, users }) => {
           </div>
         )}
         <div>
-          <p className="text-lg font-medium">{recipient?.name ? recipient?.name : recipientEmail}</p>
-          <p className="text-sm">{recipient?.name ? recipientEmail: recipient?.name }</p>
+          <p className="text-lg font-medium">
+            {recipient?.name ? recipient?.name : recipientEmail}
+          </p>
+          <p className="text-sm">
+            {recipient?.name ? recipientEmail : recipient?.name}
+          </p>
         </div>
       </div>
     </>

@@ -2,10 +2,17 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import moment from "moment/moment";
 import Image from "next/image";
+import { useState } from "react";
+import { XIcon } from "@heroicons/react/outline";
 
 const Message = ({ user, message }) => {
   const [userLoggedIn] = useAuthState(auth);
   const isMine = userLoggedIn.email === user;
+
+  const [showPopup, setShowPopup] = useState(false);
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
 
   return (
     <>
@@ -20,7 +27,8 @@ const Message = ({ user, message }) => {
           {message.imageURL ? (
             <>
               <Image
-                className="bg-white"
+                onClick={togglePopup}
+                className="bg-white cursor-pointer"
                 src={message.imageURL}
                 width={200}
                 height={200}
@@ -36,6 +44,17 @@ const Message = ({ user, message }) => {
           </p>
         </div>
       </div>
+      {showPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-[1000] bg-black bg-opacity-60 flex flex-col justify-center items-center p-1 opacity-100 transition">
+          <button
+            className="text-white fixed top-20 right-20 z-[1000] flex text-xl"
+            onClick={togglePopup}
+          >
+            <XIcon width={35} height={35} />
+          </button>
+          <Image src={message.imageURL} width={350} height={350} alt="" />
+        </div>
+      )}
     </>
   );
 };
