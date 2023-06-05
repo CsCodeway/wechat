@@ -11,6 +11,7 @@ import * as EmailValidator from "email-validator";
 import ChatBox from "./ChatBox";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Head from "next/head";
 
 const Sidebar = () => {
   const [user] = useAuthState(auth);
@@ -45,6 +46,16 @@ const Sidebar = () => {
   };
 
   return (
+    <>
+    <Head>
+        <title>CsCodeway</title>
+        <meta name="description" content="CsCodeway" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=1, maximum-scale=1"
+        />
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+      </Head>
     <div className="flex flex-col w-[350px] overflow-hidden h-[100vh] border-r border-[#f5f5f5]">
       <div className="flex flex-col pb-3">
         <div className="flex p-3">
@@ -91,6 +102,7 @@ const Sidebar = () => {
         })}
       </div>
     </div>
+    </>
   );
 };
 export default Sidebar;
