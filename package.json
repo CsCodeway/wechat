@@ -14,6 +14,7 @@
     "email-validator": "^2.0.4",
     "emoji-picker-react": "^4.4.9",
     "firebase": "^9.20.0",
+    "mic-recorder-to-mp3": "^2.2.2",
     "moment": "^2.29.4",
     "next": "13.3.1",
     "postcss": "8.4.23",

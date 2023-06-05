@@ -26,8 +26,14 @@ import ReactScrollableFeed from "react-scrollable-feed";
 import TimeAgo from "timeago-react";
 import { v4 as uuidv4 } from "uuid";
 import EmojiPicker, { SuggestionMode } from "emoji-picker-react";
+import MicRecorder from "mic-recorder-to-mp3";
+
+const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const ChatScreen = ({ chat, messages }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [isBlinking, setIsBlinking] = useState(false);
   const [user] = useAuthState(auth);
   const [text, setText] = useState("");
   const filepickerRef = useRef(null);
@@ -91,6 +97,19 @@ const ChatScreen = ({ chat, messages }) => {
       setShowPopup(false);
     }
 
+    if (audioBlob) {
+      // Upload audio to Firebase Storage
+      const storageRef = firebase.storage().ref("chats");
+      const audioRef = storageRef.child(`${router.query.id}/${uuidv4()}.mp3`);
+      const audioSnapshot = await audioRef.put(audioBlob);
+
+      // Add audio URL to message data
+      messageData.audioURL = await audioSnapshot.ref.getDownloadURL();
+
+      setAudioBlob(null);
+      setIsRecording(false);
+    }
+
     db.collection("users").doc(user.uid).set(
       {
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
@@ -104,6 +123,26 @@ const ChatScreen = ({ chat, messages }) => {
       .add(messageData);
 
     setText("");
+  };
+
+  const handleStartRecording = () => {
+    Mp3Recorder.start().then(() => {
+      setIsRecording(true);
+      setIsBlinking(true);
+    });
+  };
+
+  const handleStopRecording = () => {
+    Mp3Recorder.stop()
+      .getMp3()
+      .then(([buffer, blob]) => {
+        setAudioBlob(blob);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setIsRecording(false);
+        setIsBlinking(false);
+      });
   };
 
   const recipient = recipientSnapshot?.docs?.[0]?.data();
@@ -144,8 +183,6 @@ const ChatScreen = ({ chat, messages }) => {
   const sendIndex = () => {
     router.replace(`/`);
   };
-
-  const sendVoice = () => {};
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -213,26 +250,21 @@ const ChatScreen = ({ chat, messages }) => {
         ref={chatRef}
       >
         <ReactScrollableFeed>{showMessages()}</ReactScrollableFeed>
-      {showPopup && (
-        <div className="fixed bottom-0 ">
+        {showPopup && (
+          <div className="fixed bottom-0 ">
             <EmojiPicker
               theme="auto"
               onEmojiClick={onEmojiClick}
               suggestedEmojisMode={SuggestionMode.RECENT}
             />
-        </div>
-      )}
+          </div>
+        )}
       </div>
       <form
         className="relative flex items-center bg-white text-blue-600 border border-t-[#f5f5f5] custom-input-emoji"
         style={{ height: "calc(100vh - 4rem)", position: "sticky", bottom: 0 }}
       >
-        <PlusCircleIcon
-          width={40}
-          height={40}
-          className="cursor-pointer"
-          onClick={sendVoice}
-        />
+        <PlusCircleIcon width={40} height={40} className="cursor-pointer" />
         <PhotographIcon
           width={40}
           height={40}
@@ -270,7 +302,7 @@ const ChatScreen = ({ chat, messages }) => {
           className="w-full px-4 py-2 border text-gray-700 border-gray-100 text-lg rounded-full outline-none resize-none"
           // style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
         />
-        {text.trim() || imageToPost ? (
+        {text.trim() || imageToPost || audioBlob ? (
           <ArrowCircleRightIcon
             type="submit"
             onClick={handleOnEnter}
@@ -279,7 +311,24 @@ const ChatScreen = ({ chat, messages }) => {
             className="cursor-pointer bg-[#f5f5f5] rounded-full"
           />
         ) : (
-          <MicrophoneIcon width={37} height={37} className="cursor-pointer" />
+          ""
+        )}
+        {isRecording ? (
+        <div
+          className={`cursor-pointer text-sm pl-3 pr-0 ${
+            isBlinking ? "blink" : ""
+          }`}
+          onClick={handleStopRecording}
+        >
+          Stop recording
+        </div>
+        ) : (
+          <MicrophoneIcon
+            width={37}
+            height={37}
+            className="cursor-pointer"
+            onClick={handleStartRecording}
+          />
         )}
       </form>
     </div>

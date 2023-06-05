@@ -25,10 +25,10 @@ export default function Home() {
     <>
       <Head>
         <title>WeChat</title>
-        <meta name="description" content="Cool Chat - CsCodeway" />
+        <meta name="description" content="Wechat - CsCodeway" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=1.0, maximum-scale=1.0"
+          content="width=device-width, initial-scale=1, user-scalable=1, maximum-scale=1"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

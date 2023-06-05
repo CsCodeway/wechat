@@ -25,20 +25,19 @@ const Message = ({ user, message }) => {
           }`}
         >
           {message.imageURL ? (
-            <>
-              <Image
-                onClick={togglePopup}
-                className="bg-white cursor-pointer"
-                src={message.imageURL}
-                width={200}
-                height={200}
-                alt=""
-              />
-              <p className="pt-2 pl-1">{message.message}</p>
-            </>
+            <Image
+              onClick={togglePopup}
+              className="bg-white cursor-pointer"
+              src={message.imageURL}
+              width={200}
+              height={200}
+              alt=""
+            />
           ) : (
-            <p>{message.message}</p>
+            ""
           )}
+          {message.audioURL ? <audio src={message.audioURL} controls /> : ""}
+          <p>{message.message}</p>
           <p className=" pt-1 text-[11px] bottom-0 text-right right-0">
             {message.timestamp ? moment(message.timestamp).format("LT") : "..."}
           </p>

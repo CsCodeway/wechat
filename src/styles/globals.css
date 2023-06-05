@@ -62,4 +62,14 @@
       display: none;
     }
   }
+  .blink {
+    animation: blinker 1s linear infinite;
+  }
+  
+  @keyframes blinker {
+    70% {
+      color: red;
+    }
+  }
+  
 }
